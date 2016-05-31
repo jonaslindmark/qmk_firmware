@@ -98,7 +98,7 @@ COMMAND_ENABLE   = yes # Commands for debug and configuration
 CUSTOM_MATRIX    = yes # Custom matrix file for the ErgoDox EZ
 SLEEP_LED_ENABLE = yes  # Breathing sleep LED during USB suspend
 NKRO_ENABLE      = yes		# USB Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
-# MIDI_ENABLE    = yes 		# MIDI controls
+MIDI_ENABLE      = yes 		# MIDI controls
 # UNICODE_ENABLE = yes 		# Unicode
 
 # If you want to have your own config_user.h, you can just put it in
