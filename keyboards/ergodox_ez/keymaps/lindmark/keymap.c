@@ -20,10 +20,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
  * | LShift |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |  /   | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |LGUI  | LAlt |AltShf| Left | ESC  |                                       | RCtl | RAlt |   [  |   ]  | ~L1  |
+ *   |LGUI  | LAlt |AltShf| `/~  | ESC  |                                       | RCtl | RAlt |   [  |   ]  | ~L1  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | App  | Home |       | PgUp  | tmux |
+ *                                        | App  | Home |       | PgUp  |pydeb|
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | End  |       | PgDn |        |      |
  *                                 | Space|Backsp|------|       |------|  Tab   |Enter |
@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                        KC_RCTL, KC_RALT,KC_LBRC,KC_RBRC, KC_RCTL,
              KC_PGUP,      M(M_PYDEB),
              KC_PGDN,
-             KC_RGUI,      KC_ENT,     M(M_TMUX)
+             KC_RGUI,      KC_ENT,     KC_DEL
     ),
 /* Keymap 1: Symbol Layer
  *
@@ -116,11 +116,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 // MEDIA AND MOUSE
 [MDIA] = KEYMAP(
-       KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, M(M_PYDEB), KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS,    KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS,
-       KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                               KC_TRNS, KC_TRNS,
                                                        KC_TRNS,
                                      KC_TRNS, KC_TRNS, KC_TRNS,
@@ -142,14 +142,14 @@ const uint16_t PROGMEM fn_actions[] = {
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
   // MACRODOWN only works in this function
-      switch(id) {
-        case M_TMUX:
-          return MACRODOWN(D(LCTL),T(T),U(LCTL),END);
-        case M_PYDEB:
-          return MACRODOWN(I(2),T(I),T(M),T(P),T(O),T(R),T(T),T(SPC),T(I),T(P),T(D),T(B),T(SCLN),T(I),T(P),T(D),T(B),T(DOT),T(S),T(E),T(T),D(LSFT),T(T),U(LSFT),T(R),T(A),T(C),T(E),D(LSFT),T(LPRN),T(RPRN),U(LSFT),END);
-        break;
-      }
-    return MACRO_NONE;
+  switch(id) {
+    case M_TMUX:
+      // return MACRODOWN(D(LCTL),T(T),U(LCTL),END);
+    case M_PYDEB:
+      // return MACRODOWN(I(2),T(I),T(M),T(P),T(O),T(R),T(T),T(SPC),T(I),T(P),T(D),T(B),T(SCLN),T(I),T(P),T(D),T(B),T(DOT),T(S),T(E),T(T),D(LSFT),T(MINS),U(LSFT),T(T),T(R),T(A),T(C),T(E),D(LSFT),T(LPRN),T(RPRN),U(LSFT),END);
+      break;
+  }
+  return MACRO_NONE;
 };
 
 // Runs just one time when the keyboard initializes.
@@ -159,16 +159,5 @@ void matrix_init_user(void) {
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
-
-    uint8_t layer = biton32(layer_state);
-
-    ergodox_board_led_off();
-    ergodox_right_led_1_off();
-    ergodox_right_led_2_off();
-    ergodox_right_led_3_off();
-    switch (layer) {
-        default:
-            break;
-    }
 
 };
