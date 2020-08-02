@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 
-#define MASTER_LEFT
-// #define MASTER_RIGHT
+// #define MASTER_LEFT
+#define MASTER_RIGHT
 // #define EE_HANDS
 
 #define SSD1306OLED
@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USE_SERIAL_PD2
 
 #define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
+#define TAPPING_TERM 150
 
 #undef RGBLED_NUM
 #define RGBLIGHT_ANIMATIONS
@@ -50,3 +50,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_SLEEP
 */
+
+#define ENCODERS_PAD_A { F5 }
+#define ENCODERS_PAD_B { F4 }
+#define ENCODER_RESOLUTION 4
+
+// Enable if encoder is on the left side
+// #define ENCODER_DIRECTION_FLIP
