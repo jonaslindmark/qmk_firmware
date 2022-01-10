@@ -235,9 +235,9 @@ void encoder_update_user(uint8_t index, bool clockwise) {
     }
   } else {
     if (clockwise) {
-      tap_code(KC_MS_WH_DOWN);
+      tap_code(KC_AUDIO_VOL_DOWN);
     } else {
-      tap_code(KC_MS_WH_UP);
+      tap_code(KC_AUDIO_VOL_UP);
     }
   }
 }
