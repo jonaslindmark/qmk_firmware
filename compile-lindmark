@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec qmk compile -kb lily58/rev1 -km lindmark
