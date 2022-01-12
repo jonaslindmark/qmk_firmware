@@ -50,3 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_A { F5 }
 #define ENCODERS_PAD_B { F4 }
 #define ENCODER_RESOLUTION 4
+
+#define MOUSEKEY_DELAY 200
+#define MOUSEKEY_INTERVAL 16
+#define MOUSEKEY_MAX_SPEED 5
+#define MOUSEKEY_MOVE_DELTA 5
+#define MOUSEKEY_TIME_TO_MAX 15
