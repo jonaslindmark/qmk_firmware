@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | LOWER|   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------| RAISE |    | rota  |------+------+------+------+------+------|
- * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  | RGUI |
+ * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | ~L1  |  ESC | /Space  /       \Enter \  |`/RCTL| BSPC | RALT |
  *                   |      |      |RGUI  |/       /         \      \ |      |      |      |
@@ -45,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_EQL,         KC_1, KC_2, KC_3,    KC_4,  KC_5,                           KC_6,             KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, \
   KC_TAB,         KC_Q, KC_W, KC_E,    KC_R,  KC_T,                           KC_Y,             KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS, \
   KC_LCTL,        KC_A, KC_S, KC_D,    KC_F,  KC_G,                           KC_H,             KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT,        KC_Z, KC_X, KC_C,    KC_V,  KC_B,          RAISE,  ROTARY,  KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_LGUI, \
+  KC_LSFT,        KC_Z, KC_X, KC_C,    KC_V,  KC_B,          RAISE,  ROTARY,  KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, \
                               KC_LALT, LOWER, LGUI_T(KC_ESC),KC_SPC, KC_ENT,  RCTL_T(KC_GRAVE), KC_BSPC, KC_RALT \
 ),
 /* LOWER
@@ -93,21 +93,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
-int RGB_current_mode;
-
-// Setting ADJUST layer RGB back to default
-void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
-  if (IS_LAYER_ON(layer1) && IS_LAYER_ON(layer2)) {
-    layer_on(layer3);
-  } else {
-    layer_off(layer3);
-  }
-}
-
 void matrix_init_user(void) {
 }
 
-//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -123,20 +111,11 @@ void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
 const char *read_keylogs(void);
 
-// const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
-// void set_timelog(void);
-// const char *read_timelog(void);
-
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
-    // If you want to change the display of OLED, you need to change here
     oled_write_ln(read_layer_state(), false);
     oled_write_ln(read_keylog(), false);
     oled_write_ln(read_keylogs(), false);
-    //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
-    //oled_write_ln(read_host_led_state(), false);
-    //oled_write_ln(read_timelog(), false);
   } else {
     oled_write(read_logo(), false);
   }
@@ -145,13 +124,6 @@ bool oled_task_user(void) {
 #endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-#ifdef OLED_ENABLE
-    // set_keylog(keycode, record);
-#endif
-    // set_timelog();
-  }
-
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
@@ -162,20 +134,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
-        update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
@@ -190,20 +158,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 #ifdef ENCODER_ENABLE
-bool encoder_update_user(uint8_t index, bool clockwise) {
-  if (rotary_mode == 0) {
-    if (clockwise) {
-      tap_code(KC_PGDN);
-    } else {
-      tap_code(KC_PGUP);
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise)) {
+      return false; /* Don't process further events if user function exists and returns false */
     }
-  } else {
-    if (clockwise) {
-      tap_code(KC_AUDIO_VOL_DOWN);
-    } else {
-      tap_code(KC_AUDIO_VOL_UP);
+    if (rotary_mode == 1) {
+        if (clockwise) {
+            tap_code(KC_PGDN);
+        } else {
+            tap_code(KC_PGUP);
+        }
+    } else if (index == 1) {
+        if (clockwise) {
+          tap_code(KC_AUDIO_VOL_DOWN);
+        } else {
+          tap_code(KC_AUDIO_VOL_UP);
+        }
     }
-  }
-  return true;
+    return true;
 }
 #endif
